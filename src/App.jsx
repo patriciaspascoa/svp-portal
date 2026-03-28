@@ -249,21 +249,18 @@ export default function SVPPortal() {
     setInput("");
     setCarregando(true);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": API_KEY,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true"
-        },
-        body: JSON.stringify({
-          model: "claude-haiku-4-5-20251001",
-          max_tokens: 800,
-          system: PROMPTS[diaAtivo],
-          messages: novas.map(m => ({ role: m.role, content: m.content }))
-        })
-      });
+      const res = await fetch("/api/claude", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 800,
+    system: PROMPTS[diaAtivo],
+    messages: novas.map(m => ({ role: m.role, content: m.content }))
+  })
+});
       const data = await res.json();
       setMsgs(prev => [...prev, { role: "assistant", content: data.content?.[0]?.text || "Erro ao responder." }]);
     } catch {
