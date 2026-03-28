@@ -203,8 +203,56 @@ const DIAS = [
   }
 ];
 
+const SENHA_CORRETA = "portalsvpalunas";
+
+function TelaDeAcesso({ onAcesso }) {
+  const [valor, setValor] = useState("");
+  const [erro, setErro] = useState(false);
+
+  const verificar = () => {
+    if (valor === SENHA_CORRETA) {
+      sessionStorage.setItem("svp-acesso", "1");
+      onAcesso();
+    } else {
+      setErro(true);
+      setValor("");
+    }
+  };
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#080808", fontFamily: "'Georgia', serif", color: "#E0D8C8", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ width: "100%", maxWidth: "380px", padding: "20px" }}>
+        <div style={{ textAlign: "center", marginBottom: "40px" }}>
+          <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "10px" }}>MÉTODO ASCENDER</div>
+          <div style={{ fontSize: "22px", letterSpacing: "1px" }}>SVP</div>
+          <div style={{ fontSize: "12px", color: "#333", fontStyle: "italic", marginTop: "4px" }}>Sistema de Vendas Previsíveis</div>
+        </div>
+        <div style={{ marginBottom: "12px" }}>
+          <input
+            type="password"
+            value={valor}
+            onChange={e => { setValor(e.target.value); setErro(false); }}
+            onKeyDown={e => e.key === "Enter" && verificar()}
+            placeholder="Digite a senha de acesso"
+            autoFocus
+            style={{ width: "100%", background: "#0E0E0E", border: `1px solid ${erro ? "#E84A4A" : "#2A2A2A"}`, padding: "14px 16px", color: "#E0D8C8", fontSize: "13px", fontFamily: "Georgia, serif", outline: "none", boxSizing: "border-box" }}
+          />
+          {erro && <div style={{ fontSize: "11px", color: "#E84A4A", marginTop: "8px" }}>Senha incorreta. Tente novamente.</div>}
+        </div>
+        <button onClick={verificar}
+          style={{ width: "100%", padding: "14px", background: "#C9A84C", border: "none", color: "#080808", fontSize: "10px", letterSpacing: "3px", fontWeight: "bold", cursor: "pointer" }}>
+          ENTRAR
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function SVPPortal() {
+  const [acesso, setAcesso] = useState(() => !!sessionStorage.getItem("svp-acesso"));
   const [diaAtivo, setDiaAtivo] = useState(0);
+
+  if (!acesso) return <TelaDeAcesso onAcesso={() => setAcesso(true)} />;
   const [progresso, setProgresso] = useState(() => {
     try { return JSON.parse(localStorage.getItem("svp-progresso") || "{}"); } catch { return {}; }
   });
