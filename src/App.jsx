@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 
-const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
-
 const ABERTURAS = [
   "Sou o Diagnóstico Inicial. Antes de tentarmos vender qualquer coisa, precisamos saber qual incêndio você está apagando. Esqueça branding e persona perfeita por enquanto. Me diga: qual dificuldade concreta você resolve e quem é a pessoa que está sofrendo com isso agora? (E não esqueça de abrir o seu documento SVP).",
   "Sou o Estruturador de Oferta. Antes de darmos forma à sua promessa, cole aqui a sua BASE COMERCIAL DEFINIDA (DIA 0). Eu não crio promessas sobre o vazio; eu as crio sobre problemas reais.",
@@ -210,15 +208,35 @@ export default function SVPPortal() {
   const [progresso, setProgresso] = useState(() => {
     try { return JSON.parse(localStorage.getItem("svp-progresso") || "{}"); } catch { return {}; }
   });
-  const [msgs, setMsgs] = useState([]);
+  const [msgs, setMsgs] = useState(() => {
+    try {
+      const h = JSON.parse(localStorage.getItem("svp-chat-histories") || "{}");
+      return h[0] || [];
+    } catch { return []; }
+  });
   const [input, setInput] = useState("");
   const [carregando, setCarregando] = useState(false);
   const [tab, setTab] = useState("sessao");
+  const [showModal, setShowModal] = useState(() => !localStorage.getItem("svp-onboarding-seen"));
   const msgsRef = useRef(null);
 
   useEffect(() => {
     try { localStorage.setItem("svp-progresso", JSON.stringify(progresso)); } catch {}
   }, [progresso]);
+
+  useEffect(() => {
+    try {
+      const h = JSON.parse(localStorage.getItem("svp-chat-histories") || "{}");
+      setMsgs(h[diaAtivo] || []);
+    } catch { setMsgs([]); }
+  }, [diaAtivo]);
+
+  useEffect(() => {
+    try {
+      const h = JSON.parse(localStorage.getItem("svp-chat-histories") || "{}");
+      localStorage.setItem("svp-chat-histories", JSON.stringify({ ...h, [diaAtivo]: msgs }));
+    } catch {}
+  }, [msgs]);
 
   useEffect(() => { msgsRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
 
@@ -236,6 +254,11 @@ export default function SVPPortal() {
     salvar(diaAtivo, { ...p, checks });
   };
 
+  const fecharModal = () => {
+    localStorage.setItem("svp-onboarding-seen", "1");
+    setShowModal(false);
+  };
+
   const iniciarAgente = () => {
     setMsgs([{ role: "assistant", content: ABERTURAS[diaAtivo] }]);
     setTab("agente");
@@ -250,17 +273,15 @@ export default function SVPPortal() {
     setCarregando(true);
     try {
       const res = await fetch("/api/claude", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 800,
-    system: PROMPTS[diaAtivo],
-    messages: novas.map(m => ({ role: m.role, content: m.content }))
-  })
-});
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 800,
+          system: PROMPTS[diaAtivo],
+          messages: novas.map(m => ({ role: m.role, content: m.content }))
+        })
+      });
       const data = await res.json();
       setMsgs(prev => [...prev, { role: "assistant", content: data.content?.[0]?.text || "Erro ao responder." }]);
     } catch {
@@ -269,20 +290,87 @@ export default function SVPPortal() {
     setCarregando(false);
   };
 
+  const baixarDocumento = () => {
+    const linhas = DIAS.map(d => {
+      const notas = (progresso[d.id]?.notas || "").trim();
+      const sep = "=".repeat(52);
+      return `${sep}\n${d.label} — ${d.titulo.toUpperCase()}\n${sep}\n${notas || "(sem output registrado)"}\n`;
+    });
+    const conteudo =
+      "MÉTODO ASCENDER — SVP\nSistema de Vendas Previsíveis\nGerado em: " +
+      new Date().toLocaleDateString("pt-BR") +
+      "\n\n" +
+      linhas.join("\n");
+    const blob = new Blob([conteudo], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "SVP-Documento.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const totalConcluidos = DIAS.filter((_, i) => concluido(i)).length;
   const pct = Math.round((totalConcluidos / DIAS.length) * 100);
 
   return (
     <div style={{ minHeight: "100vh", background: "#080808", fontFamily: "'Georgia', serif", color: "#E0D8C8" }}>
+
+      {/* Modal de orientação */}
+      {showModal && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+          <div style={{ background: "#0E0E0E", border: "1px solid #2A2A2A", maxWidth: "480px", width: "100%", padding: "36px" }}>
+            <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "6px" }}>ANTES DE COMEÇAR</div>
+            <div style={{ fontSize: "20px", marginBottom: "24px" }}>Como usar o portal SVP</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "28px" }}>
+              {[
+                { n: "1", t: "Baixe o documento SVP", d: "No Vídeo 1 você encontra o link para baixar o documento SVP. Deixe-o aberto enquanto usa o portal." },
+                { n: "2", t: "Copie os outputs para o documento", d: "Ao final de cada conversa com o agente, copie o bloco de output gerado e cole no documento SVP antes de avançar." },
+                { n: "3", t: "Use a aba Anotações", d: "Cole o output do agente na caixa de Anotações da sessão — isso salva automaticamente e permite gerar o documento completo depois." },
+                { n: "4", t: "Não feche sem salvar", d: "O histórico do chat é salvo automaticamente, mas copie o output no documento SVP antes de fechar o navegador." },
+              ].map(item => (
+                <div key={item.n} style={{ display: "flex", gap: "14px" }}>
+                  <div style={{ width: "24px", height: "24px", border: "1px solid #C9A84C44", color: "#C9A84C", fontSize: "10px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{item.n}</div>
+                  <div>
+                    <div style={{ fontSize: "12px", color: "#E0D8C8", marginBottom: "3px" }}>{item.t}</div>
+                    <div style={{ fontSize: "11px", color: "#555", lineHeight: 1.6 }}>{item.d}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button onClick={fecharModal}
+              style={{ width: "100%", padding: "14px", background: "#C9A84C", border: "none", color: "#080808", fontSize: "10px", letterSpacing: "3px", fontWeight: "bold", cursor: "pointer" }}>
+              ENTENDI — COMEÇAR
+            </button>
+          </div>
+        </div>
+      )}
+
       <header style={{ borderBottom: "1px solid #181818", padding: "18px 32px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#0A0A0A", position: "sticky", top: 0, zIndex: 20 }}>
         <div>
           <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "3px" }}>MÉTODO ASCENDER</div>
           <div style={{ fontSize: "19px", letterSpacing: "1px" }}>SVP <span style={{ color: "#333", fontSize: "13px", fontStyle: "italic" }}>— Sistema de Vendas Previsíveis</span></div>
         </div>
-        <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: "10px", color: "#555", letterSpacing: "1px", marginBottom: "6px" }}>{totalConcluidos}/{DIAS.length} etapas</div>
-          <div style={{ width: "140px", height: "2px", background: "#1A1A1A" }}>
-            <div style={{ height: "100%", width: `${pct}%`, background: "#C9A84C", transition: "width 0.5s" }} />
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <button onClick={baixarDocumento}
+            title="Baixar documento com todos os outputs"
+            style={{ background: "none", border: "1px solid #2A2A2A", color: "#555", fontSize: "10px", letterSpacing: "1px", padding: "7px 14px", cursor: "pointer", transition: "all 0.2s" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = "#C9A84C"; e.currentTarget.style.color = "#C9A84C"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.color = "#555"; }}>
+            ↓ DOCUMENTO
+          </button>
+          <button onClick={() => setShowModal(true)}
+            title="Ver orientações de uso"
+            style={{ background: "none", border: "1px solid #2A2A2A", color: "#555", fontSize: "10px", letterSpacing: "1px", padding: "7px 14px", cursor: "pointer", transition: "all 0.2s" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = "#555"; e.currentTarget.style.color = "#888"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.color = "#555"; }}>
+            ? AJUDA
+          </button>
+          <div style={{ textAlign: "right" }}>
+            <div style={{ fontSize: "10px", color: "#555", letterSpacing: "1px", marginBottom: "6px" }}>{totalConcluidos}/{DIAS.length} etapas</div>
+            <div style={{ width: "140px", height: "2px", background: "#1A1A1A" }}>
+              <div style={{ height: "100%", width: `${pct}%`, background: "#C9A84C", transition: "width 0.5s" }} />
+            </div>
           </div>
         </div>
       </header>
@@ -295,7 +383,7 @@ export default function SVPPortal() {
             const ok = concluido(i);
             const bloq = !desbloqueado(i);
             return (
-              <button key={i} onClick={() => { if (!bloq) { setDiaAtivo(i); setTab("sessao"); setMsgs([]); } }} disabled={bloq}
+              <button key={i} onClick={() => { if (!bloq) { setDiaAtivo(i); setTab("sessao"); } }} disabled={bloq}
                 style={{ width: "100%", padding: "12px 20px", background: ativo ? "#141414" : "none", border: "none", borderLeft: ativo ? `2px solid ${d.cor}` : "2px solid transparent", cursor: bloq ? "not-allowed" : "pointer", textAlign: "left", opacity: bloq ? 0.25 : 1, transition: "all 0.15s" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                   <span style={{ fontSize: "11px", color: ok ? "#6B8E7F" : ativo ? d.cor : "#2A2A2A" }}>{ok ? "✓" : bloq ? "🔒" : "○"}</span>
@@ -367,7 +455,7 @@ export default function SVPPortal() {
                   <span style={{ fontSize: "20px", color: dia.cor }}>◎</span>
                   <div>
                     <div style={{ fontSize: "11px", color: dia.cor, letterSpacing: "1px", marginBottom: "2px" }}>{dia.titulo}</div>
-                    <div style={{ fontSize: "11px", color: "#444" }}>Abrir o agente desta etapa →</div>
+                    <div style={{ fontSize: "11px", color: "#444" }}>{msgs.length > 0 ? "Continuar conversa com o agente →" : "Abrir o agente desta etapa →"}</div>
                   </div>
                 </div>
 
@@ -387,7 +475,7 @@ export default function SVPPortal() {
                     })}
                   </div>
                   {concluido(diaAtivo) && diaAtivo < DIAS.length - 1 && (
-                    <button onClick={() => { setDiaAtivo(diaAtivo + 1); setTab("sessao"); setMsgs([]); }}
+                    <button onClick={() => { setDiaAtivo(diaAtivo + 1); setTab("sessao"); }}
                       style={{ marginTop: "10px", width: "100%", padding: "14px", background: dia.cor, border: "none", color: "#080808", fontSize: "10px", letterSpacing: "2px", fontWeight: "bold", cursor: "pointer" }}>
                       AVANÇAR PARA {DIAS[diaAtivo + 1]?.label} →
                     </button>
@@ -410,6 +498,14 @@ export default function SVPPortal() {
             </div>
           ) : (
             <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+              {/* Aviso: copiar antes de sair */}
+              <div style={{ padding: "9px 28px", background: "#0D0D0D", borderBottom: "1px solid #1A1A1A", display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
+                <span style={{ color: "#C9A84C", fontSize: "11px" }}>⚠</span>
+                <span style={{ fontSize: "11px", color: "#666" }}>
+                  Copie o output final do agente e cole na aba <strong style={{ color: "#888" }}>SESSÃO → Anotações</strong> antes de sair ou avançar para o próximo dia.
+                </span>
+              </div>
+
               <div style={{ flex: 1, overflowY: "auto", padding: "20px 28px", display: "flex", flexDirection: "column", gap: "12px" }}>
                 {msgs.map((m, i) => (
                   <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
