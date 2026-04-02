@@ -117,7 +117,7 @@ const DIAS = [
       ],
       regra: "Não ajuste nada ainda. Cole no documento SVP e leve para o Agente 1."
     },
-    checklist: ["Abri o documento SVP do Vídeo 1", "Identifiquei o problema principal concreto", "Descrevi a situação real em que ele aparece", "Nomeei a pessoa afetada sem filtros", "Copiei o bloco BASE COMERCIAL no documento SVP"]
+    checklist: ["Li as instruções desta sessão antes de começar", "Identifiquei o problema principal concreto", "Descrevi a situação real em que ele aparece", "Nomeei a pessoa afetada sem filtros", "Copiei o bloco BASE COMERCIAL nas Anotações"]
   },
   {
     id: 1, label: "DIA 1", titulo: "Estruturador da Oferta",
@@ -374,7 +374,7 @@ export default function SVPPortal() {
               {[
                 { n: "1", t: "Use a aba Anotações", d: "Cole a resposta do agente na aba Anotações de cada sessão para acompanhar. Isso salva automaticamente." },
                 { n: "2", t: "Não pule etapas", d: "Cada agente exige a resposta do agente anterior. Siga a ordem do Dia 0 ao Dia 5–7." },
-                { n: "3", t: "Não feche sem salvar nas Anotações", d: "O histórico do chat salva automaticamente, mas cole o output na aba Anotações antes de avançar." },
+                { n: "3", t: "Não feche sem salvar nas Anotações", d: "O histórico do chat salva automaticamente, mas cole a resposta do agente na aba Anotações antes de avançar." },
                 { n: "4", t: "Baixe seu documento no final", d: "Ao concluir todas as etapas, clique em DOCUMENTO no topo para baixar o resumo completo." },
               ].map(item => (
                 <div key={item.n} style={{ display: "flex", gap: "16px" }}>
@@ -460,6 +460,24 @@ export default function SVPPortal() {
           {tab === "sessao" ? (
             <div style={{ flex: 1, overflowY: "auto", padding: "36px 40px" }}>
               <div style={{ maxWidth: "700px" }}>
+
+                <div style={{ marginBottom: "32px", padding: "20px 24px", background: "#1E293B", border: "1px solid #374151", borderLeft: "3px solid #C9A84C" }}>
+                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#C9A84C", marginBottom: "14px" }}>COMO USAR ESTA ETAPA</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    {[
+                      "Leia as informações desta sessão",
+                      "Clique na aba AGENTE e converse com ele",
+                      "Cole a resposta do agente na aba Anotações abaixo",
+                      "Marque o checklist ao concluir",
+                    ].map((passo, i) => (
+                      <div key={i} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                        <span style={{ fontSize: "10px", color: "#C9A84C", fontWeight: "600", flexShrink: 0, marginTop: "2px" }}>{i + 1}.</span>
+                        <span style={{ fontSize: "14px", color: "#9CA3AF", lineHeight: 1.5 }}>{passo}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 <div style={{ marginBottom: "32px" }}>
                   <div style={{ fontSize: "10px", color: dia.cor, letterSpacing: "3px", marginBottom: "10px" }}>{dia.label} · {dia.tempo}</div>
                   <div style={{ fontSize: "24px", marginBottom: "6px", fontWeight: "600" }}>{dia.titulo}</div>
@@ -537,9 +555,9 @@ export default function SVPPortal() {
                 </div>
 
                 <div>
-                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#6B7280", marginBottom: "12px" }}>ANOTAÇÕES — cole o output do agente aqui</div>
+                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#6B7280", marginBottom: "12px" }}>ANOTAÇÕES — cole a resposta do agente aqui</div>
                   <textarea key={diaAtivo} defaultValue={p.notas || ""} onBlur={e => salvar(diaAtivo, { ...p, notas: e.target.value })}
-                    placeholder="Cole aqui o bloco de output gerado pelo agente…"
+                    placeholder="Cole aqui a resposta do agente…"
                     style={{ width: "100%", minHeight: "120px", background: "#1E293B", border: "1px solid #1F2937", padding: "16px", color: "#9CA3AF", fontSize: "14px", lineHeight: 1.7, fontFamily: "'Inter', system-ui, -apple-system, sans-serif", resize: "vertical", outline: "none", boxSizing: "border-box" }} />
                 </div>
               </div>
@@ -550,7 +568,7 @@ export default function SVPPortal() {
               <div style={{ padding: "11px 32px", background: "#0F172A", borderBottom: "1px solid #1F2937", display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 }}>
                 <span style={{ color: "#C9A84C", fontSize: "13px" }}>⚠</span>
                 <span style={{ fontSize: "13px", color: "#9CA3AF" }}>
-                  Copie o output final do agente e cole na aba <strong style={{ color: "#F1F5F9" }}>SESSÃO → Anotações</strong> antes de sair ou avançar para o próximo dia.
+                  Copie a resposta final do agente e cole na aba <strong style={{ color: "#F1F5F9" }}>SESSÃO → Anotações</strong> antes de sair ou avançar para o próximo dia.
                 </span>
               </div>
 
@@ -572,7 +590,7 @@ export default function SVPPortal() {
               <div style={{ padding: "16px 32px", borderTop: "1px solid #1F2937", display: "flex", gap: "12px", background: "#0F172A", flexShrink: 0 }}>
                 <textarea value={input} onChange={e => setInput(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); enviar(); } }}
-                  placeholder="Digite sua mensagem ou cole o output do agente anterior…" rows={2}
+                  placeholder="Digite sua mensagem ou cole a resposta do agente anterior…" rows={2}
                   style={{ flex: 1, background: "#1E293B", border: "1px solid #374151", padding: "13px 16px", color: "#F1F5F9", fontSize: "15px", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", resize: "none", outline: "none" }} />
                 <button onClick={enviar} disabled={carregando || !input.trim()}
                   style={{ padding: "0 22px", background: carregando || !input.trim() ? "#1E293B" : dia.cor, border: `1px solid ${carregando || !input.trim() ? "#374151" : dia.cor}`, color: carregando || !input.trim() ? "#4B5563" : "#0F172A", cursor: carregando || !input.trim() ? "default" : "pointer", fontSize: "18px", transition: "all 0.2s", fontWeight: "600" }}>→</button>
