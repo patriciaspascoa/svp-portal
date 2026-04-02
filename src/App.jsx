@@ -264,6 +264,7 @@ export default function SVPPortal() {
   const [carregando, setCarregando] = useState(false);
   const [tab, setTab] = useState("sessao");
   const [showModal, setShowModal] = useState(() => !localStorage.getItem("svp-onboarding-seen"));
+  const [showConfirmReinicio, setShowConfirmReinicio] = useState(false);
   const msgsRef = useRef(null);
 
   useEffect(() => {
@@ -305,6 +306,19 @@ export default function SVPPortal() {
   const fecharModal = () => {
     localStorage.setItem("svp-onboarding-seen", "1");
     setShowModal(false);
+  };
+
+  const reiniciarJornada = () => {
+    localStorage.removeItem("svp-progresso");
+    localStorage.removeItem("svp-chat-histories");
+    localStorage.removeItem("svp-onboarding-seen");
+    sessionStorage.removeItem("svp-acesso");
+    setProgresso({});
+    setMsgs([]);
+    setDiaAtivo(0);
+    setTab("sessao");
+    setShowConfirmReinicio(false);
+    setAcesso(false);
   };
 
   const iniciarAgente = () => {
@@ -418,6 +432,29 @@ export default function SVPPortal() {
         </div>
       )}
 
+      {/* Modal de confirmação — Reiniciar jornada */}
+      {showConfirmReinicio && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
+          <div style={{ background: "#1E293B", border: "1px solid #E84A4A55", maxWidth: "420px", width: "100%", padding: "40px" }}>
+            <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#E84A4A", marginBottom: "8px" }}>ATENÇÃO</div>
+            <div style={{ fontSize: "20px", fontWeight: "600", marginBottom: "16px" }}>Reiniciar jornada?</div>
+            <div style={{ fontSize: "14px", color: "#9CA3AF", lineHeight: 1.7, marginBottom: "32px" }}>
+              Isso vai apagar <strong style={{ color: "#F1F5F9" }}>todo o seu progresso</strong>: checklist, anotações e histórico de conversas de todas as sessões. Essa ação não pode ser desfeita.
+            </div>
+            <div style={{ display: "flex", gap: "12px" }}>
+              <button onClick={() => setShowConfirmReinicio(false)}
+                style={{ flex: 1, padding: "14px", background: "none", border: "1px solid #374151", color: "#9CA3AF", fontSize: "10px", letterSpacing: "2px", fontWeight: "600", cursor: "pointer", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
+                CANCELAR
+              </button>
+              <button onClick={reiniciarJornada}
+                style={{ flex: 1, padding: "14px", background: "#E84A4A", border: "none", color: "#fff", fontSize: "10px", letterSpacing: "2px", fontWeight: "700", cursor: "pointer", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
+                SIM, REINICIAR TUDO
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header style={{ borderBottom: "1px solid #1F2937", padding: "20px 40px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#0F172A", position: "sticky", top: 0, zIndex: 20 }}>
         <div>
           <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "4px" }}>MÉTODO ASCENDER</div>
@@ -437,6 +474,13 @@ export default function SVPPortal() {
             onMouseEnter={e => { e.currentTarget.style.borderColor = "#6B7280"; e.currentTarget.style.color = "#F1F5F9"; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = "#374151"; e.currentTarget.style.color = "#9CA3AF"; }}>
             ? AJUDA
+          </button>
+          <button onClick={() => setShowConfirmReinicio(true)}
+            title="Apagar todo o progresso e reiniciar do zero"
+            style={{ background: "none", border: "1px solid #374151", color: "#4B5563", fontSize: "10px", letterSpacing: "1px", padding: "9px 18px", cursor: "pointer", transition: "all 0.2s", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", fontWeight: "500" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = "#E84A4A88"; e.currentTarget.style.color = "#E84A4A"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = "#374151"; e.currentTarget.style.color = "#4B5563"; }}>
+            ↺ REINICIAR
           </button>
           <div style={{ textAlign: "right", marginLeft: "12px" }}>
             <div style={{ fontSize: "11px", color: "#9CA3AF", letterSpacing: "1px", marginBottom: "7px" }}>{totalConcluidos}/{DIAS.length} etapas</div>
