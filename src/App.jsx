@@ -251,8 +251,6 @@ function TelaDeAcesso({ onAcesso }) {
 export default function SVPPortal() {
   const [acesso, setAcesso] = useState(() => !!sessionStorage.getItem("svp-acesso"));
   const [diaAtivo, setDiaAtivo] = useState(0);
-
-  if (!acesso) return <TelaDeAcesso onAcesso={() => setAcesso(true)} />;
   const [progresso, setProgresso] = useState(() => {
     try { return JSON.parse(localStorage.getItem("svp-progresso") || "{}"); } catch { return {}; }
   });
@@ -287,6 +285,8 @@ export default function SVPPortal() {
   }, [msgs]);
 
   useEffect(() => { msgsRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
+
+  if (!acesso) return <TelaDeAcesso onAcesso={() => setAcesso(true)} />;
 
   const dia = DIAS[diaAtivo];
   const p = progresso[diaAtivo] || { checks: [], notas: "" };
