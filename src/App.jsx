@@ -220,14 +220,14 @@ function TelaDeAcesso({ onAcesso }) {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#080808", fontFamily: "'Georgia', serif", color: "#E0D8C8", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ width: "100%", maxWidth: "380px", padding: "20px" }}>
-        <div style={{ textAlign: "center", marginBottom: "40px" }}>
-          <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "10px" }}>MÉTODO ASCENDER</div>
-          <div style={{ fontSize: "22px", letterSpacing: "1px" }}>SVP</div>
-          <div style={{ fontSize: "12px", color: "#333", fontStyle: "italic", marginTop: "4px" }}>Sistema de Vendas Previsíveis</div>
+    <div style={{ minHeight: "100vh", background: "#111827", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", color: "#F1F5F9", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ width: "100%", maxWidth: "400px", padding: "32px 24px" }}>
+        <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "12px" }}>MÉTODO ASCENDER</div>
+          <div style={{ fontSize: "26px", letterSpacing: "2px", fontWeight: "600" }}>SVP</div>
+          <div style={{ fontSize: "14px", color: "#6B7280", marginTop: "6px" }}>Sistema de Vendas Previsíveis</div>
         </div>
-        <div style={{ marginBottom: "12px" }}>
+        <div style={{ marginBottom: "16px" }}>
           <input
             type="password"
             value={valor}
@@ -235,12 +235,12 @@ function TelaDeAcesso({ onAcesso }) {
             onKeyDown={e => e.key === "Enter" && verificar()}
             placeholder="Digite a senha de acesso"
             autoFocus
-            style={{ width: "100%", background: "#0E0E0E", border: `1px solid ${erro ? "#E84A4A" : "#2A2A2A"}`, padding: "14px 16px", color: "#E0D8C8", fontSize: "13px", fontFamily: "Georgia, serif", outline: "none", boxSizing: "border-box" }}
+            style={{ width: "100%", background: "#1E293B", border: `1px solid ${erro ? "#E84A4A" : "#374151"}`, padding: "15px 18px", color: "#F1F5F9", fontSize: "15px", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", outline: "none", boxSizing: "border-box", borderRadius: "2px" }}
           />
-          {erro && <div style={{ fontSize: "11px", color: "#E84A4A", marginTop: "8px" }}>Senha incorreta. Tente novamente.</div>}
+          {erro && <div style={{ fontSize: "13px", color: "#E84A4A", marginTop: "10px" }}>Senha incorreta. Tente novamente.</div>}
         </div>
         <button onClick={verificar}
-          style={{ width: "100%", padding: "14px", background: "#C9A84C", border: "none", color: "#080808", fontSize: "10px", letterSpacing: "3px", fontWeight: "bold", cursor: "pointer" }}>
+          style={{ width: "100%", padding: "16px", background: "#C9A84C", border: "none", color: "#0F172A", fontSize: "10px", letterSpacing: "3px", fontWeight: "700", cursor: "pointer", borderRadius: "2px" }}>
           ENTRAR
         </button>
       </div>
@@ -362,220 +362,220 @@ export default function SVPPortal() {
   const pct = Math.round((totalConcluidos / DIAS.length) * 100);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#080808", fontFamily: "'Georgia', serif", color: "#E0D8C8" }}>
+    <div style={{ minHeight: "100vh", background: "#111827", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", color: "#F1F5F9" }}>
 
       {/* Modal de orientação */}
       {showModal && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
-          <div style={{ background: "#0E0E0E", border: "1px solid #2A2A2A", maxWidth: "480px", width: "100%", padding: "36px" }}>
-            <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "6px" }}>ANTES DE COMEÇAR</div>
-            <div style={{ fontSize: "20px", marginBottom: "24px" }}>Como usar o portal SVP</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "28px" }}>
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
+          <div style={{ background: "#1E293B", border: "1px solid #374151", maxWidth: "500px", width: "100%", padding: "44px" }}>
+            <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "8px" }}>ANTES DE COMEÇAR</div>
+            <div style={{ fontSize: "22px", fontWeight: "600", marginBottom: "32px" }}>Como usar o portal SVP</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "36px" }}>
               {[
                 { n: "1", t: "Baixe o documento SVP", d: "No Vídeo 1 você encontra o link para baixar o documento SVP. Deixe-o aberto enquanto usa o portal." },
                 { n: "2", t: "Copie os outputs para o documento", d: "Ao final de cada conversa com o agente, copie o bloco de output gerado e cole no documento SVP antes de avançar." },
                 { n: "3", t: "Use a aba Anotações", d: "Cole o output do agente na caixa de Anotações da sessão — isso salva automaticamente e permite gerar o documento completo depois." },
                 { n: "4", t: "Não feche sem salvar", d: "O histórico do chat é salvo automaticamente, mas copie o output no documento SVP antes de fechar o navegador." },
               ].map(item => (
-                <div key={item.n} style={{ display: "flex", gap: "14px" }}>
-                  <div style={{ width: "24px", height: "24px", border: "1px solid #C9A84C44", color: "#C9A84C", fontSize: "10px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{item.n}</div>
+                <div key={item.n} style={{ display: "flex", gap: "16px" }}>
+                  <div style={{ width: "28px", height: "28px", border: "1px solid #C9A84C55", color: "#C9A84C", fontSize: "11px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontWeight: "600" }}>{item.n}</div>
                   <div>
-                    <div style={{ fontSize: "12px", color: "#E0D8C8", marginBottom: "3px" }}>{item.t}</div>
-                    <div style={{ fontSize: "11px", color: "#555", lineHeight: 1.6 }}>{item.d}</div>
+                    <div style={{ fontSize: "14px", color: "#F1F5F9", marginBottom: "4px", fontWeight: "500" }}>{item.t}</div>
+                    <div style={{ fontSize: "14px", color: "#9CA3AF", lineHeight: 1.6 }}>{item.d}</div>
                   </div>
                 </div>
               ))}
             </div>
             <button onClick={fecharModal}
-              style={{ width: "100%", padding: "14px", background: "#C9A84C", border: "none", color: "#080808", fontSize: "10px", letterSpacing: "3px", fontWeight: "bold", cursor: "pointer" }}>
+              style={{ width: "100%", padding: "16px", background: "#C9A84C", border: "none", color: "#0F172A", fontSize: "10px", letterSpacing: "3px", fontWeight: "700", cursor: "pointer", borderRadius: "2px" }}>
               ENTENDI — COMEÇAR
             </button>
           </div>
         </div>
       )}
 
-      <header style={{ borderBottom: "1px solid #181818", padding: "18px 32px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#0A0A0A", position: "sticky", top: 0, zIndex: 20 }}>
+      <header style={{ borderBottom: "1px solid #1F2937", padding: "20px 40px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#0F172A", position: "sticky", top: 0, zIndex: 20 }}>
         <div>
-          <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "3px" }}>MÉTODO ASCENDER</div>
-          <div style={{ fontSize: "19px", letterSpacing: "1px" }}>SVP <span style={{ color: "#333", fontSize: "13px", fontStyle: "italic" }}>— Sistema de Vendas Previsíveis</span></div>
+          <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "4px" }}>MÉTODO ASCENDER</div>
+          <div style={{ fontSize: "20px", letterSpacing: "1px", fontWeight: "600" }}>SVP <span style={{ color: "#6B7280", fontSize: "14px", fontWeight: "400" }}>— Sistema de Vendas Previsíveis</span></div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <button onClick={baixarDocumento}
             title="Baixar documento com todos os outputs"
-            style={{ background: "none", border: "1px solid #2A2A2A", color: "#555", fontSize: "10px", letterSpacing: "1px", padding: "7px 14px", cursor: "pointer", transition: "all 0.2s" }}
+            style={{ background: "none", border: "1px solid #374151", color: "#9CA3AF", fontSize: "10px", letterSpacing: "1px", padding: "9px 18px", cursor: "pointer", transition: "all 0.2s", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", fontWeight: "500" }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = "#C9A84C"; e.currentTarget.style.color = "#C9A84C"; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.color = "#555"; }}>
+            onMouseLeave={e => { e.currentTarget.style.borderColor = "#374151"; e.currentTarget.style.color = "#9CA3AF"; }}>
             ↓ DOCUMENTO
           </button>
           <button onClick={() => setShowModal(true)}
             title="Ver orientações de uso"
-            style={{ background: "none", border: "1px solid #2A2A2A", color: "#555", fontSize: "10px", letterSpacing: "1px", padding: "7px 14px", cursor: "pointer", transition: "all 0.2s" }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = "#555"; e.currentTarget.style.color = "#888"; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.color = "#555"; }}>
+            style={{ background: "none", border: "1px solid #374151", color: "#9CA3AF", fontSize: "10px", letterSpacing: "1px", padding: "9px 18px", cursor: "pointer", transition: "all 0.2s", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", fontWeight: "500" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = "#6B7280"; e.currentTarget.style.color = "#F1F5F9"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = "#374151"; e.currentTarget.style.color = "#9CA3AF"; }}>
             ? AJUDA
           </button>
-          <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: "10px", color: "#555", letterSpacing: "1px", marginBottom: "6px" }}>{totalConcluidos}/{DIAS.length} etapas</div>
-            <div style={{ width: "140px", height: "2px", background: "#1A1A1A" }}>
+          <div style={{ textAlign: "right", marginLeft: "12px" }}>
+            <div style={{ fontSize: "11px", color: "#9CA3AF", letterSpacing: "1px", marginBottom: "7px" }}>{totalConcluidos}/{DIAS.length} etapas</div>
+            <div style={{ width: "140px", height: "2px", background: "#1F2937" }}>
               <div style={{ height: "100%", width: `${pct}%`, background: "#C9A84C", transition: "width 0.5s" }} />
             </div>
           </div>
         </div>
       </header>
 
-      <div style={{ display: "flex", height: "calc(100vh - 61px)" }}>
-        <aside style={{ width: "220px", minWidth: "220px", borderRight: "1px solid #181818", background: "#0A0A0A", overflowY: "auto" }}>
-          <div style={{ padding: "20px 20px 10px", fontSize: "9px", letterSpacing: "3px", color: "#2A2A2A" }}>TRILHA</div>
+      <div style={{ display: "flex", height: "calc(100vh - 69px)" }}>
+        <aside style={{ width: "240px", minWidth: "240px", borderRight: "1px solid #1F2937", background: "#0F172A", overflowY: "auto" }}>
+          <div style={{ padding: "24px 22px 12px", fontSize: "9px", letterSpacing: "3px", color: "#6B7280" }}>TRILHA</div>
           {DIAS.map((d, i) => {
             const ativo = diaAtivo === i;
             const ok = concluido(i);
             const bloq = !desbloqueado(i);
             return (
               <button key={i} onClick={() => { if (!bloq) { setDiaAtivo(i); setTab("sessao"); } }} disabled={bloq}
-                style={{ width: "100%", padding: "12px 20px", background: ativo ? "#141414" : "none", border: "none", borderLeft: ativo ? `2px solid ${d.cor}` : "2px solid transparent", cursor: bloq ? "not-allowed" : "pointer", textAlign: "left", opacity: bloq ? 0.25 : 1, transition: "all 0.15s" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <span style={{ fontSize: "11px", color: ok ? "#6B8E7F" : ativo ? d.cor : "#2A2A2A" }}>{ok ? "✓" : bloq ? "🔒" : "○"}</span>
+                style={{ width: "100%", padding: "14px 22px", background: ativo ? "#1E293B" : "none", border: "none", borderLeft: ativo ? `2px solid ${d.cor}` : "2px solid transparent", cursor: bloq ? "not-allowed" : "pointer", textAlign: "left", opacity: bloq ? 0.3 : 1, transition: "all 0.15s" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <span style={{ fontSize: "13px", color: ok ? "#6B8E7F" : ativo ? d.cor : "#374151" }}>{ok ? "✓" : bloq ? "🔒" : "○"}</span>
                   <div>
-                    <div style={{ fontSize: "9px", color: d.cor, letterSpacing: "1px", opacity: 0.8, marginBottom: "2px" }}>{d.label}</div>
-                    <div style={{ fontSize: "11px", color: ativo ? "#E0D8C8" : "#555", lineHeight: 1.3 }}>{d.titulo}</div>
+                    <div style={{ fontSize: "9px", color: d.cor, letterSpacing: "1px", opacity: 0.85, marginBottom: "3px" }}>{d.label}</div>
+                    <div style={{ fontSize: "13px", color: ativo ? "#F1F5F9" : "#9CA3AF", lineHeight: 1.3, fontWeight: ativo ? "500" : "400" }}>{d.titulo}</div>
                   </div>
                 </div>
               </button>
             );
           })}
-          <div style={{ margin: "16px", padding: "14px", background: "#111", border: "1px solid #1A1A1A" }}>
-            <div style={{ fontSize: "9px", color: "#2A2A2A", letterSpacing: "2px", marginBottom: "6px" }}>INSTALAÇÃO</div>
-            <div style={{ fontSize: "24px", color: "#C9A84C" }}>{pct}%</div>
+          <div style={{ margin: "20px 16px", padding: "18px", background: "#1E293B", border: "1px solid #1F2937" }}>
+            <div style={{ fontSize: "9px", color: "#6B7280", letterSpacing: "2px", marginBottom: "8px" }}>INSTALAÇÃO</div>
+            <div style={{ fontSize: "26px", color: "#C9A84C", fontWeight: "600" }}>{pct}%</div>
           </div>
         </aside>
 
         <main style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-          <div style={{ borderBottom: "1px solid #181818", display: "flex", background: "#0A0A0A", flexShrink: 0 }}>
-            <button onClick={() => setTab("sessao")} style={{ padding: "13px 24px", background: "none", border: "none", borderBottom: tab === "sessao" ? `2px solid ${dia.cor}` : "2px solid transparent", color: tab === "sessao" ? "#E0D8C8" : "#3A3A3A", fontSize: "10px", letterSpacing: "2px", cursor: "pointer" }}>SESSÃO</button>
-            <button onClick={() => { setTab("agente"); if (msgs.length === 0) iniciarAgente(); }} style={{ padding: "13px 24px", background: "none", border: "none", borderBottom: tab === "agente" ? `2px solid ${dia.cor}` : "2px solid transparent", color: tab === "agente" ? "#E0D8C8" : "#3A3A3A", fontSize: "10px", letterSpacing: "2px", cursor: "pointer" }}>
+          <div style={{ borderBottom: "1px solid #1F2937", display: "flex", background: "#0F172A", flexShrink: 0 }}>
+            <button onClick={() => setTab("sessao")} style={{ padding: "15px 28px", background: "none", border: "none", borderBottom: tab === "sessao" ? `2px solid ${dia.cor}` : "2px solid transparent", color: tab === "sessao" ? "#F1F5F9" : "#6B7280", fontSize: "10px", letterSpacing: "2px", cursor: "pointer", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", fontWeight: "500" }}>SESSÃO</button>
+            <button onClick={() => { setTab("agente"); if (msgs.length === 0) iniciarAgente(); }} style={{ padding: "15px 28px", background: "none", border: "none", borderBottom: tab === "agente" ? `2px solid ${dia.cor}` : "2px solid transparent", color: tab === "agente" ? "#F1F5F9" : "#6B7280", fontSize: "10px", letterSpacing: "2px", cursor: "pointer", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", fontWeight: "500" }}>
               <span style={{ color: dia.cor, marginRight: "6px" }}>◎</span>AGENTE
             </button>
           </div>
 
           {tab === "sessao" ? (
-            <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px" }}>
-              <div style={{ maxWidth: "660px" }}>
+            <div style={{ flex: 1, overflowY: "auto", padding: "36px 40px" }}>
+              <div style={{ maxWidth: "700px" }}>
+                <div style={{ marginBottom: "32px" }}>
+                  <div style={{ fontSize: "10px", color: dia.cor, letterSpacing: "3px", marginBottom: "10px" }}>{dia.label} · {dia.tempo}</div>
+                  <div style={{ fontSize: "24px", marginBottom: "6px", fontWeight: "600" }}>{dia.titulo}</div>
+                  <div style={{ fontSize: "14px", color: "#9CA3AF" }}>{dia.funcao}</div>
+                </div>
+
+                <div style={{ padding: "20px 24px", background: "#1E293B", borderLeft: `3px solid ${dia.cor}`, border: `1px solid ${dia.cor}22`, marginBottom: "24px" }}>
+                  <div style={{ fontSize: "15px", color: "#9CA3AF", lineHeight: 1.75 }}>{dia.descricao}</div>
+                </div>
+
                 <div style={{ marginBottom: "24px" }}>
-                  <div style={{ fontSize: "10px", color: dia.cor, letterSpacing: "3px", marginBottom: "8px" }}>{dia.label} · {dia.tempo}</div>
-                  <div style={{ fontSize: "22px", marginBottom: "4px" }}>{dia.titulo}</div>
-                  <div style={{ fontSize: "12px", color: "#555", fontStyle: "italic" }}>{dia.funcao}</div>
-                </div>
-
-                <div style={{ padding: "16px 20px", background: "#0E0E0E", borderLeft: `3px solid ${dia.cor}`, border: `1px solid ${dia.cor}22`, marginBottom: "18px" }}>
-                  <div style={{ fontSize: "13px", color: "#666", lineHeight: 1.7 }}>{dia.descricao}</div>
-                </div>
-
-                <div style={{ marginBottom: "18px" }}>
-                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#2A2A2A", marginBottom: "10px" }}>REGRAS</div>
-                  <div style={{ background: "#0E0E0E", border: "1px solid #161616" }}>
+                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#6B7280", marginBottom: "12px" }}>REGRAS</div>
+                  <div style={{ background: "#1E293B", border: "1px solid #1F2937" }}>
                     {dia.regras.map((r, i) => (
-                      <div key={i} style={{ display: "flex", gap: "10px", padding: "9px 16px", borderBottom: i < dia.regras.length - 1 ? "1px solid #141414" : "none" }}>
-                        <span style={{ color: "#E84A4A", fontSize: "9px", marginTop: "4px", flexShrink: 0 }}>✕</span>
-                        <span style={{ fontSize: "12px", color: "#555" }}>{r}</span>
+                      <div key={i} style={{ display: "flex", gap: "12px", padding: "13px 20px", borderBottom: i < dia.regras.length - 1 ? "1px solid #243044" : "none" }}>
+                        <span style={{ color: "#E84A4A", fontSize: "10px", marginTop: "3px", flexShrink: 0 }}>✕</span>
+                        <span style={{ fontSize: "14px", color: "#9CA3AF" }}>{r}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div style={{ marginBottom: "18px" }}>
-                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#2A2A2A", marginBottom: "10px" }}>OUTPUT ESPERADO</div>
-                  <div style={{ background: "#0E0E0E", border: "1px solid #161616", padding: "18px" }}>
-                    <div style={{ fontSize: "11px", color: dia.cor, letterSpacing: "1px", marginBottom: "12px" }}>✅ {dia.output.titulo}</div>
+                <div style={{ marginBottom: "24px" }}>
+                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#6B7280", marginBottom: "12px" }}>OUTPUT ESPERADO</div>
+                  <div style={{ background: "#1E293B", border: "1px solid #1F2937", padding: "24px" }}>
+                    <div style={{ fontSize: "12px", color: dia.cor, letterSpacing: "1px", marginBottom: "16px", fontWeight: "500" }}>✅ {dia.output.titulo}</div>
                     {dia.output.itens.map((item, i) => (
-                      <div key={i} style={{ marginBottom: "10px", paddingBottom: "10px", borderBottom: i < dia.output.itens.length - 1 ? "1px solid #141414" : "none" }}>
-                        <div style={{ fontSize: "9px", color: dia.cor, letterSpacing: "1px", marginBottom: "3px" }}>{i + 1}. {item.label}</div>
-                        <div style={{ fontSize: "12px", color: "#555" }}>{item.desc}</div>
+                      <div key={i} style={{ marginBottom: "14px", paddingBottom: "14px", borderBottom: i < dia.output.itens.length - 1 ? "1px solid #243044" : "none" }}>
+                        <div style={{ fontSize: "10px", color: dia.cor, letterSpacing: "1px", marginBottom: "4px", fontWeight: "500" }}>{i + 1}. {item.label}</div>
+                        <div style={{ fontSize: "14px", color: "#9CA3AF" }}>{item.desc}</div>
                       </div>
                     ))}
-                    <div style={{ marginTop: "10px", padding: "10px 14px", background: "#141414", borderLeft: `2px solid ${dia.cor}55`, fontSize: "11px", color: "#555", fontStyle: "italic" }}>{dia.output.regra}</div>
+                    <div style={{ marginTop: "14px", padding: "12px 16px", background: "#243044", borderLeft: `2px solid ${dia.cor}55`, fontSize: "13px", color: "#9CA3AF", fontStyle: "italic" }}>{dia.output.regra}</div>
                   </div>
                 </div>
 
                 <div onClick={() => { setTab("agente"); if (msgs.length === 0) iniciarAgente(); }}
-                  style={{ padding: "14px 20px", background: "#0E0E0E", border: `1px solid ${dia.cor}33`, cursor: "pointer", display: "flex", alignItems: "center", gap: "14px", marginBottom: "18px", transition: "border-color 0.2s" }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor = dia.cor + "88"}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = dia.cor + "33"}>
-                  <span style={{ fontSize: "20px", color: dia.cor }}>◎</span>
+                  style={{ padding: "18px 24px", background: "#1E293B", border: `1px solid ${dia.cor}44`, cursor: "pointer", display: "flex", alignItems: "center", gap: "16px", marginBottom: "24px", transition: "border-color 0.2s" }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = dia.cor + "99"}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = dia.cor + "44"}>
+                  <span style={{ fontSize: "22px", color: dia.cor }}>◎</span>
                   <div>
-                    <div style={{ fontSize: "11px", color: dia.cor, letterSpacing: "1px", marginBottom: "2px" }}>{dia.titulo}</div>
-                    <div style={{ fontSize: "11px", color: "#444" }}>{msgs.length > 0 ? "Continuar conversa com o agente →" : "Abrir o agente desta etapa →"}</div>
+                    <div style={{ fontSize: "12px", color: dia.cor, letterSpacing: "1px", marginBottom: "4px", fontWeight: "500" }}>{dia.titulo}</div>
+                    <div style={{ fontSize: "14px", color: "#9CA3AF" }}>{msgs.length > 0 ? "Continuar conversa com o agente →" : "Abrir o agente desta etapa →"}</div>
                   </div>
                 </div>
 
-                <div style={{ marginBottom: "18px" }}>
-                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#2A2A2A", marginBottom: "10px" }}>CHECKLIST — {p.checks.length}/{dia.checklist.length}</div>
-                  <div style={{ background: "#0E0E0E", border: "1px solid #161616" }}>
+                <div style={{ marginBottom: "24px" }}>
+                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#6B7280", marginBottom: "12px" }}>CHECKLIST — {p.checks.length}/{dia.checklist.length}</div>
+                  <div style={{ background: "#1E293B", border: "1px solid #1F2937" }}>
                     {dia.checklist.map((item, idx) => {
                       const checked = p.checks.includes(idx);
                       return (
-                        <div key={idx} onClick={() => toggleCheck(idx)} style={{ display: "flex", gap: "12px", padding: "11px 16px", borderBottom: idx < dia.checklist.length - 1 ? "1px solid #141414" : "none", cursor: "pointer", alignItems: "flex-start" }}>
-                          <div style={{ width: "15px", height: "15px", border: `1px solid ${checked ? "#6B8E7F" : "#2A2A2A"}`, borderRadius: "2px", flexShrink: 0, marginTop: "2px", background: checked ? "#6B8E7F15" : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            {checked && <span style={{ fontSize: "9px", color: "#6B8E7F" }}>✓</span>}
+                        <div key={idx} onClick={() => toggleCheck(idx)} style={{ display: "flex", gap: "14px", padding: "14px 20px", borderBottom: idx < dia.checklist.length - 1 ? "1px solid #243044" : "none", cursor: "pointer", alignItems: "flex-start" }}>
+                          <div style={{ width: "18px", height: "18px", border: `1px solid ${checked ? "#6B8E7F" : "#374151"}`, borderRadius: "2px", flexShrink: 0, marginTop: "2px", background: checked ? "#6B8E7F20" : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            {checked && <span style={{ fontSize: "10px", color: "#6B8E7F" }}>✓</span>}
                           </div>
-                          <span style={{ fontSize: "12px", color: checked ? "#3A3A3A" : "#666", lineHeight: 1.5, textDecoration: checked ? "line-through" : "none" }}>{item}</span>
+                          <span style={{ fontSize: "14px", color: checked ? "#4B5563" : "#9CA3AF", lineHeight: 1.5, textDecoration: checked ? "line-through" : "none" }}>{item}</span>
                         </div>
                       );
                     })}
                   </div>
                   {concluido(diaAtivo) && diaAtivo < DIAS.length - 1 && (
                     <button onClick={() => { setDiaAtivo(diaAtivo + 1); setTab("sessao"); }}
-                      style={{ marginTop: "10px", width: "100%", padding: "14px", background: dia.cor, border: "none", color: "#080808", fontSize: "10px", letterSpacing: "2px", fontWeight: "bold", cursor: "pointer" }}>
+                      style={{ marginTop: "12px", width: "100%", padding: "16px", background: dia.cor, border: "none", color: "#0F172A", fontSize: "10px", letterSpacing: "2px", fontWeight: "700", cursor: "pointer", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
                       AVANÇAR PARA {DIAS[diaAtivo + 1]?.label} →
                     </button>
                   )}
                   {concluido(5) && diaAtivo === 5 && (
-                    <div style={{ marginTop: "10px", padding: "16px", background: "#0E0E0E", border: "1px solid #6B8E7F44", textAlign: "center" }}>
-                      <div style={{ fontSize: "12px", color: "#6B8E7F", marginBottom: "4px" }}>✓ SVP CONCLUÍDO</div>
-                      <div style={{ fontSize: "11px", color: "#444" }}>Sua estrutura mínima de vendas está instalada.</div>
+                    <div style={{ marginTop: "12px", padding: "20px", background: "#1E293B", border: "1px solid #6B8E7F44", textAlign: "center" }}>
+                      <div style={{ fontSize: "14px", color: "#6B8E7F", marginBottom: "6px", fontWeight: "500" }}>✓ SVP CONCLUÍDO</div>
+                      <div style={{ fontSize: "14px", color: "#9CA3AF" }}>Sua estrutura mínima de vendas está instalada.</div>
                     </div>
                   )}
                 </div>
 
                 <div>
-                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#2A2A2A", marginBottom: "10px" }}>ANOTAÇÕES — cole o output do agente aqui</div>
+                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#6B7280", marginBottom: "12px" }}>ANOTAÇÕES — cole o output do agente aqui</div>
                   <textarea key={diaAtivo} defaultValue={p.notas || ""} onBlur={e => salvar(diaAtivo, { ...p, notas: e.target.value })}
                     placeholder="Cole aqui o bloco de output gerado pelo agente…"
-                    style={{ width: "100%", minHeight: "100px", background: "#0E0E0E", border: "1px solid #161616", padding: "14px", color: "#666", fontSize: "12px", lineHeight: 1.7, fontFamily: "Georgia, serif", resize: "vertical", outline: "none", boxSizing: "border-box" }} />
+                    style={{ width: "100%", minHeight: "120px", background: "#1E293B", border: "1px solid #1F2937", padding: "16px", color: "#9CA3AF", fontSize: "14px", lineHeight: 1.7, fontFamily: "'Inter', system-ui, -apple-system, sans-serif", resize: "vertical", outline: "none", boxSizing: "border-box" }} />
                 </div>
               </div>
             </div>
           ) : (
             <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
               {/* Aviso: copiar antes de sair */}
-              <div style={{ padding: "9px 28px", background: "#0D0D0D", borderBottom: "1px solid #1A1A1A", display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
-                <span style={{ color: "#C9A84C", fontSize: "11px" }}>⚠</span>
-                <span style={{ fontSize: "11px", color: "#666" }}>
-                  Copie o output final do agente e cole na aba <strong style={{ color: "#888" }}>SESSÃO → Anotações</strong> antes de sair ou avançar para o próximo dia.
+              <div style={{ padding: "11px 32px", background: "#0F172A", borderBottom: "1px solid #1F2937", display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 }}>
+                <span style={{ color: "#C9A84C", fontSize: "13px" }}>⚠</span>
+                <span style={{ fontSize: "13px", color: "#9CA3AF" }}>
+                  Copie o output final do agente e cole na aba <strong style={{ color: "#F1F5F9" }}>SESSÃO → Anotações</strong> antes de sair ou avançar para o próximo dia.
                 </span>
               </div>
 
-              <div style={{ flex: 1, overflowY: "auto", padding: "20px 28px", display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div style={{ flex: 1, overflowY: "auto", padding: "24px 32px", display: "flex", flexDirection: "column", gap: "14px" }}>
                 {msgs.map((m, i) => (
                   <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
-                    <div style={{ maxWidth: "78%", padding: "13px 16px", background: m.role === "user" ? dia.cor + "15" : "#111", border: `1px solid ${m.role === "user" ? dia.cor + "44" : "#1C1C1C"}`, fontSize: "13px", lineHeight: 1.75, color: "#C0B8A8", whiteSpace: "pre-wrap" }}>
+                    <div style={{ maxWidth: "78%", padding: "15px 18px", background: m.role === "user" ? dia.cor + "18" : "#1E293B", border: `1px solid ${m.role === "user" ? dia.cor + "55" : "#374151"}`, fontSize: "15px", lineHeight: 1.75, color: "#E2E8F0", whiteSpace: "pre-wrap" }}>
                       {m.content}
                     </div>
                   </div>
                 ))}
                 {carregando && (
-                  <div style={{ display: "flex", gap: "5px", padding: "6px 4px" }}>
-                    {[0, 1, 2].map(i => <div key={i} style={{ width: "6px", height: "6px", borderRadius: "50%", background: dia.cor, opacity: 0.5, animation: `pulse 1.2s ${i * 0.2}s infinite` }} />)}
+                  <div style={{ display: "flex", gap: "6px", padding: "8px 4px" }}>
+                    {[0, 1, 2].map(i => <div key={i} style={{ width: "7px", height: "7px", borderRadius: "50%", background: dia.cor, opacity: 0.5, animation: `pulse 1.2s ${i * 0.2}s infinite` }} />)}
                   </div>
                 )}
                 <div ref={msgsRef} />
               </div>
-              <div style={{ padding: "14px 28px", borderTop: "1px solid #181818", display: "flex", gap: "10px", background: "#0A0A0A", flexShrink: 0 }}>
+              <div style={{ padding: "16px 32px", borderTop: "1px solid #1F2937", display: "flex", gap: "12px", background: "#0F172A", flexShrink: 0 }}>
                 <textarea value={input} onChange={e => setInput(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); enviar(); } }}
                   placeholder="Digite sua mensagem ou cole o output do agente anterior…" rows={2}
-                  style={{ flex: 1, background: "#111", border: "1px solid #1C1C1C", padding: "11px 14px", color: "#E0D8C8", fontSize: "13px", fontFamily: "Georgia, serif", resize: "none", outline: "none" }} />
+                  style={{ flex: 1, background: "#1E293B", border: "1px solid #374151", padding: "13px 16px", color: "#F1F5F9", fontSize: "15px", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", resize: "none", outline: "none" }} />
                 <button onClick={enviar} disabled={carregando || !input.trim()}
-                  style={{ padding: "0 18px", background: carregando || !input.trim() ? "#141414" : dia.cor, border: "none", color: carregando || !input.trim() ? "#333" : "#080808", cursor: carregando || !input.trim() ? "default" : "pointer", fontSize: "16px", transition: "all 0.2s" }}>→</button>
+                  style={{ padding: "0 22px", background: carregando || !input.trim() ? "#1E293B" : dia.cor, border: `1px solid ${carregando || !input.trim() ? "#374151" : dia.cor}`, color: carregando || !input.trim() ? "#4B5563" : "#0F172A", cursor: carregando || !input.trim() ? "default" : "pointer", fontSize: "18px", transition: "all 0.2s", fontWeight: "600" }}>→</button>
               </div>
             </div>
           )}
@@ -583,12 +583,14 @@ export default function SVPPortal() {
       </div>
 
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         @keyframes pulse { 0%,100%{opacity:.2;transform:scale(.8)} 50%{opacity:1;transform:scale(1.2)} }
         * { box-sizing: border-box; }
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-track { background: #080808; }
-        ::-webkit-scrollbar-thumb { background: #1C1C1C; }
-        textarea::placeholder { color: #2A2A2A; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0F172A; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
+        textarea::placeholder { color: #4B5563; }
+        input::placeholder { color: #4B5563; }
       `}</style>
     </div>
   );
