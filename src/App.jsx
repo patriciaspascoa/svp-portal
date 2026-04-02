@@ -372,10 +372,10 @@ export default function SVPPortal() {
             <div style={{ fontSize: "22px", fontWeight: "600", marginBottom: "32px" }}>Como usar o portal SVP</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "36px" }}>
               {[
-                { n: "1", t: "Baixe o documento SVP", d: "No Vídeo 1 você encontra o link para baixar o documento SVP. Deixe-o aberto enquanto usa o portal." },
-                { n: "2", t: "Copie os outputs para o documento", d: "Ao final de cada conversa com o agente, copie o bloco de output gerado e cole no documento SVP antes de avançar." },
-                { n: "3", t: "Use a aba Anotações", d: "Cole o output do agente na caixa de Anotações da sessão — isso salva automaticamente e permite gerar o documento completo depois." },
-                { n: "4", t: "Não feche sem salvar", d: "O histórico do chat é salvo automaticamente, mas copie o output no documento SVP antes de fechar o navegador." },
+                { n: "1", t: "Use a aba Anotações", d: "Cole a resposta do agente na aba Anotações de cada sessão para acompanhar. Isso salva automaticamente." },
+                { n: "2", t: "Não pule etapas", d: "Cada agente exige a resposta do agente anterior. Siga a ordem do Dia 0 ao Dia 5–7." },
+                { n: "3", t: "Não feche sem salvar nas Anotações", d: "O histórico do chat salva automaticamente, mas cole o output na aba Anotações antes de avançar." },
+                { n: "4", t: "Baixe seu documento no final", d: "Ao concluir todas as etapas, clique em DOCUMENTO no topo para baixar o resumo completo." },
               ].map(item => (
                 <div key={item.n} style={{ display: "flex", gap: "16px" }}>
                   <div style={{ width: "28px", height: "28px", border: "1px solid #C9A84C55", color: "#C9A84C", fontSize: "11px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontWeight: "600" }}>{item.n}</div>
