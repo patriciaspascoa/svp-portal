@@ -115,7 +115,7 @@ const DIAS = [
         { label: "SITUAÇÃO REAL", desc: "Em que momento exato esse problema aparece?" },
         { label: "PESSOA AFETADA", desc: "Quem vive isso hoje, sem filtros de avatar?" }
       ],
-      regra: "Não ajuste nada ainda. Cole no documento SVP e leve para o Agente 1."
+      regra: "Não ajuste nada ainda. Cole a resposta do agente na aba Anotações."
     },
     checklist: ["Li as instruções desta sessão antes de começar", "Identifiquei o problema principal concreto", "Descrevi a situação real em que ele aparece", "Nomeei a pessoa afetada sem filtros", "Copiei o bloco BASE COMERCIAL nas Anotações"]
   },
@@ -132,9 +132,9 @@ const DIAS = [
         { label: "RESULTADO CONCRETO", desc: "O que ela ganha de forma mensurável" },
         { label: "REGRA DE ESTABILIDADE", desc: "Blindada por 30 dias. Alteração = sabotagem." }
       ],
-      regra: "Este bloco é a CHAVE DE ACESSO para o Agente 2."
+      regra: "A oferta fica blindada por 30 dias. Cole a resposta do agente nas Anotações."
     },
-    checklist: ["Colei o bloco BASE COMERCIAL (Dia 0)", "Promessa em 1 frase objetiva", "Público com especificidade real", "Resultado concreto e mensurável", "Compromisso de não mudar por 30 dias", "Copiei o bloco ESTABILIZAÇÃO no documento SVP"]
+    checklist: ["Colei o bloco BASE COMERCIAL (Dia 0)", "Promessa em 1 frase objetiva", "Público com especificidade real", "Resultado concreto e mensurável", "Compromisso de não mudar por 30 dias", "Colei a resposta do agente nas Anotações"]
   },
   {
     id: 2, label: "DIA 2", titulo: "Engenheiro de MVP",
@@ -149,9 +149,9 @@ const DIAS = [
         { label: "PREÇO", desc: "Valor de validação definido agora" },
         { label: "COMPRA", desc: "Link ou PIX — como a pessoa compra" }
       ],
-      regra: "Sem nome perfeito, sem site, sem logo. Este bloco será exigido pelo Agente 3."
+      regra: "Sem nome perfeito, sem site, sem logo. Cole a resposta do agente nas Anotações."
     },
-    checklist: ["Colei o bloco ESTABILIZAÇÃO (Dia 1)", "Estrutura do produto definida", "Escopo claro e enxuto", "Preço definido (não vou pensar)", "Forma de pagamento configurada", "Copiei o bloco MVP no documento SVP"]
+    checklist: ["Colei o bloco ESTABILIZAÇÃO (Dia 1)", "Estrutura do produto definida", "Escopo claro e enxuto", "Preço definido (não vou pensar)", "Forma de pagamento configurada", "Colei a resposta do agente nas Anotações"]
   },
   {
     id: 3, label: "DIA 3", titulo: "Arquiteto de Fluxo",
@@ -165,9 +165,9 @@ const DIAS = [
         { label: "CTA", desc: "A frase única de chamada" },
         { label: "SCRIPTS", desc: "Abordagem / Objeção / Fechamento" }
       ],
-      regra: "Nada de múltiplos caminhos. O Agente 4 vai cobrar a execução."
+      regra: "Nada de múltiplos caminhos. Cole a resposta do agente nas Anotações."
     },
-    checklist: ["Colei o bloco MVP (Dia 2)", "Canal único definido", "CTA único escrito e memorizado", "Script de abordagem pronto", "Script de objeção pronto", "Script de fechamento pronto", "Copiei o bloco FLUXO no documento SVP"]
+    checklist: ["Colei o bloco MVP (Dia 2)", "Canal único definido", "CTA único escrito e memorizado", "Script de abordagem pronto", "Script de objeção pronto", "Script de fechamento pronto", "Colei a resposta do agente nas Anotações"]
   },
   {
     id: 4, label: "DIA 4", titulo: "Analista de Ativação",
@@ -181,9 +181,9 @@ const DIAS = [
         { label: "TABELA DE REGISTRO", desc: "Data | Abordagem | Oferta | Resultado" },
         { label: "STATUS", desc: "Em execução" }
       ],
-      regra: "Se não houver oferta, o lucro será zero. O Agente 5 exigirá seus números."
+      regra: "Se não houver oferta, o lucro será zero. Cole a resposta do agente nas Anotações."
     },
-    checklist: ["Colei o bloco FLUXO (Dia 3)", "Meta diária em números concretos", "Tabela de registro criada", "Primeiro lote de contatos mapeado", "Primeira oferta enviada hoje", "Copiei o bloco KIT no documento SVP"]
+    checklist: ["Colei o bloco FLUXO (Dia 3)", "Meta diária em números concretos", "Tabela de registro criada", "Primeiro lote de contatos mapeado", "Primeira oferta enviada hoje", "Colei a resposta do agente nas Anotações"]
   },
   {
     id: 5, label: "DIAS 5–7", titulo: "Analista de Gargalo",
