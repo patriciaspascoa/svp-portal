@@ -312,6 +312,11 @@ export default function SVPPortal() {
     setTab("agente");
   };
 
+  const extrairOutput = (texto) => {
+    const idx = texto.indexOf("✅");
+    return idx !== -1 ? texto.slice(idx).trim() : null;
+  };
+
   const enviar = async () => {
     if (!input.trim() || carregando) return;
     const userMsg = { role: "user", content: input };
@@ -331,7 +336,15 @@ export default function SVPPortal() {
         })
       });
       const data = await res.json();
-      setMsgs(prev => [...prev, { role: "assistant", content: data.content?.[0]?.text || "Erro ao responder." }]);
+      const texto = data.content?.[0]?.text || "Erro ao responder.";
+      const outputBloco = extrairOutput(texto);
+      if (outputBloco) {
+        setProgresso(prev => ({
+          ...prev,
+          [diaAtivo]: { ...(prev[diaAtivo] || { checks: [] }), notas: outputBloco }
+        }));
+      }
+      setMsgs(prev => [...prev, { role: "assistant", content: texto }]);
     } catch {
       setMsgs(prev => [...prev, { role: "assistant", content: "Erro de conexão. Tente novamente." }]);
     }
@@ -342,7 +355,7 @@ export default function SVPPortal() {
     const linhas = DIAS.map(d => {
       const notas = (progresso[d.id]?.notas || "").trim();
       const sep = "=".repeat(52);
-      return `${sep}\n${d.label} — ${d.titulo.toUpperCase()}\n${sep}\n${notas || "(sem output registrado)"}\n`;
+      return `${sep}\n${d.label} — ${d.titulo.toUpperCase()}\n${sep}\n${notas || "(sem resposta salva)"}\n`;
     });
     const conteudo =
       "MÉTODO ASCENDER — SVP\nSistema de Vendas Previsíveis\nGerado em: " +
@@ -372,7 +385,7 @@ export default function SVPPortal() {
             <div style={{ fontSize: "22px", fontWeight: "600", marginBottom: "32px" }}>Como usar o portal SVP</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "36px" }}>
               {[
-                { n: "1", t: "Use a aba Anotações", d: "Cole a resposta do agente na aba Anotações de cada sessão para acompanhar. Isso salva automaticamente." },
+                { n: "1", t: "O output é salvo automaticamente", d: "Quando o agente gerar o output final (✅), ele é salvo automaticamente nas Anotações da sessão. Você não precisa copiar nada." },
                 { n: "2", t: "Não pule etapas", d: "Cada agente exige a resposta do agente anterior. Siga a ordem do Dia 0 ao Dia 5–7." },
                 { n: "3", t: "Não feche sem salvar nas Anotações", d: "O histórico do chat salva automaticamente, mas cole a resposta do agente na aba Anotações antes de avançar." },
                 { n: "4", t: "Baixe seu documento no final", d: "Ao concluir todas as etapas, clique em DOCUMENTO no topo para baixar o resumo completo." },
@@ -467,7 +480,7 @@ export default function SVPPortal() {
                     {[
                       "Leia as informações desta sessão",
                       "Clique na aba AGENTE e converse com ele",
-                      "Cole a resposta do agente na aba Anotações abaixo",
+                      "O output final (✅) é salvo automaticamente nas Anotações",
                       "Marque o checklist ao concluir",
                     ].map((passo, i) => (
                       <div key={i} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
@@ -555,20 +568,31 @@ export default function SVPPortal() {
                 </div>
 
                 <div>
-                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#6B7280", marginBottom: "12px" }}>ANOTAÇÕES — cole a resposta do agente aqui</div>
-                  <textarea key={diaAtivo} defaultValue={p.notas || ""} onBlur={e => salvar(diaAtivo, { ...p, notas: e.target.value })}
-                    placeholder="Cole aqui a resposta do agente…"
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+                    <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#6B7280" }}>ANOTAÇÕES</div>
+                    {p.notas ? (
+                      <div style={{ fontSize: "11px", color: "#6B8E7F", display: "flex", alignItems: "center", gap: "4px" }}>
+                        <span>✅</span> Salvo automaticamente
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: "11px", color: "#4B5563" }}>o output do agente aparece aqui</div>
+                    )}
+                  </div>
+                  <textarea
+                    value={p.notas || ""}
+                    onChange={e => salvar(diaAtivo, { ...p, notas: e.target.value })}
+                    placeholder="A resposta do agente será salva aqui automaticamente quando ele gerar o output final (✅)."
                     style={{ width: "100%", minHeight: "120px", background: "#1E293B", border: "1px solid #1F2937", padding: "16px", color: "#9CA3AF", fontSize: "14px", lineHeight: 1.7, fontFamily: "'Inter', system-ui, -apple-system, sans-serif", resize: "vertical", outline: "none", boxSizing: "border-box" }} />
                 </div>
               </div>
             </div>
           ) : (
             <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-              {/* Aviso: copiar antes de sair */}
+              {/* Aviso: salvamento automático */}
               <div style={{ padding: "11px 32px", background: "#0F172A", borderBottom: "1px solid #1F2937", display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 }}>
-                <span style={{ color: "#C9A84C", fontSize: "13px" }}>⚠</span>
+                <span style={{ color: "#6B8E7F", fontSize: "13px" }}>✅</span>
                 <span style={{ fontSize: "13px", color: "#9CA3AF" }}>
-                  Copie a resposta final do agente e cole na aba <strong style={{ color: "#F1F5F9" }}>SESSÃO → Anotações</strong> antes de sair ou avançar para o próximo dia.
+                  Quando o agente gerar o output final, ele será salvo automaticamente nas <strong style={{ color: "#F1F5F9" }}>Anotações</strong> desta sessão.
                 </span>
               </div>
 
