@@ -336,7 +336,18 @@ export default function SVPPortal() {
         })
       });
       const data = await res.json();
-      const texto = data.content?.[0]?.text || "Erro ao responder.";
+      if (!res.ok || data.error) {
+        const motivo = data.error || "Erro desconhecido.";
+        setMsgs(prev => [...prev, { role: "assistant", content: `Erro ao conectar com o agente: ${motivo}` }]);
+        setCarregando(false);
+        return;
+      }
+      const texto = data.content?.[0]?.text;
+      if (!texto) {
+        setMsgs(prev => [...prev, { role: "assistant", content: "O agente não retornou resposta. Tente novamente." }]);
+        setCarregando(false);
+        return;
+      }
       const outputBloco = extrairOutput(texto);
       if (outputBloco) {
         setProgresso(prev => ({
@@ -345,8 +356,8 @@ export default function SVPPortal() {
         }));
       }
       setMsgs(prev => [...prev, { role: "assistant", content: texto }]);
-    } catch {
-      setMsgs(prev => [...prev, { role: "assistant", content: "Erro de conexão. Tente novamente." }]);
+    } catch (err) {
+      setMsgs(prev => [...prev, { role: "assistant", content: `Erro de conexão: ${err.message}` }]);
     }
     setCarregando(false);
   };
