@@ -215,6 +215,14 @@ export default function SVPPortal() {
   const [carregando, setCarregando] = useState(false);
   const [tab, setTab] = useState("sessao");
   const msgsRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const [sidebarAberta, setSidebarAberta] = useState(false);
+
+  useEffect(() => {
+    const fn = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
 
   useEffect(() => {
     try { localStorage.setItem("svp-progresso", JSON.stringify(progresso)); } catch {}
@@ -277,28 +285,51 @@ export default function SVPPortal() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#080808", fontFamily: "'Georgia', serif", color: "#E0D8C8" }}>
-      <header style={{ borderBottom: "1px solid #181818", padding: "18px 32px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#0A0A0A", position: "sticky", top: 0, zIndex: 20 }}>
-        <div>
-          <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "3px" }}>MÉTODO ASCENDER</div>
-          <div style={{ fontSize: "19px", letterSpacing: "1px" }}>SVP <span style={{ color: "#333", fontSize: "13px", fontStyle: "italic" }}>— Sistema de Vendas Previsíveis</span></div>
+      <header style={{ borderBottom: "1px solid #181818", padding: isMobile ? "14px 16px" : "18px 32px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#0A0A0A", position: "sticky", top: 0, zIndex: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          {isMobile && (
+            <button onClick={() => setSidebarAberta(v => !v)}
+              style={{ background: "none", border: "none", color: "#C9A84C", fontSize: "22px", cursor: "pointer", padding: "2px 4px", lineHeight: 1, flexShrink: 0 }}>
+              {sidebarAberta ? "✕" : "☰"}
+            </button>
+          )}
+          <div>
+            <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "3px" }}>MÉTODO ASCENDER</div>
+            <div style={{ fontSize: isMobile ? "15px" : "19px", letterSpacing: "1px" }}>
+              SVP {!isMobile && <span style={{ color: "#333", fontSize: "13px", fontStyle: "italic" }}>— Sistema de Vendas Previsíveis</span>}
+            </div>
+          </div>
         </div>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: "10px", color: "#555", letterSpacing: "1px", marginBottom: "6px" }}>{totalConcluidos}/{DIAS.length} etapas</div>
-          <div style={{ width: "140px", height: "2px", background: "#1A1A1A" }}>
+          <div style={{ width: isMobile ? "90px" : "140px", height: "2px", background: "#1A1A1A" }}>
             <div style={{ height: "100%", width: `${pct}%`, background: "#C9A84C", transition: "width 0.5s" }} />
           </div>
         </div>
       </header>
 
       <div style={{ display: "flex", height: "calc(100vh - 61px)" }}>
-        <aside style={{ width: "220px", minWidth: "220px", borderRight: "1px solid #181818", background: "#0A0A0A", overflowY: "auto" }}>
+        {isMobile && sidebarAberta && (
+          <div onClick={() => setSidebarAberta(false)}
+            style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", zIndex: 28, top: "61px" }} />
+        )}
+        <aside style={{
+          width: "220px", minWidth: "220px",
+          borderRight: "1px solid #181818", background: "#0A0A0A", overflowY: "auto",
+          ...(isMobile ? {
+            position: "fixed", left: 0, top: "61px", bottom: 0,
+            transform: sidebarAberta ? "translateX(0)" : "translateX(-100%)",
+            transition: "transform 0.25s ease",
+            zIndex: 29
+          } : {})
+        }}>
           <div style={{ padding: "20px 20px 10px", fontSize: "9px", letterSpacing: "3px", color: "#2A2A2A" }}>TRILHA</div>
           {DIAS.map((d, i) => {
             const ativo = diaAtivo === i;
             const ok = concluido(i);
             const bloq = !desbloqueado(i);
             return (
-              <button key={i} onClick={() => { if (!bloq) { setDiaAtivo(i); setTab("sessao"); setMsgs([]); } }} disabled={bloq}
+              <button key={i} onClick={() => { if (!bloq) { setDiaAtivo(i); setTab("sessao"); setMsgs([]); if (isMobile) setSidebarAberta(false); } }} disabled={bloq}
                 style={{ width: "100%", padding: "12px 20px", background: ativo ? "#141414" : "none", border: "none", borderLeft: ativo ? `2px solid ${d.cor}` : "2px solid transparent", cursor: bloq ? "not-allowed" : "pointer", textAlign: "left", opacity: bloq ? 0.25 : 1, transition: "all 0.15s" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                   <span style={{ fontSize: "11px", color: ok ? "#6B8E7F" : ativo ? d.cor : "#2A2A2A" }}>{ok ? "✓" : bloq ? "🔒" : "○"}</span>
@@ -325,7 +356,7 @@ export default function SVPPortal() {
           </div>
 
           {tab === "sessao" ? (
-            <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px" }}>
+            <div style={{ flex: 1, overflowY: "auto", padding: isMobile ? "20px 16px" : "28px 32px" }}>
               <div style={{ maxWidth: "660px" }}>
                 <div style={{ marginBottom: "24px" }}>
                   <div style={{ fontSize: "10px", color: dia.cor, letterSpacing: "3px", marginBottom: "8px" }}>{dia.label} · {dia.tempo}</div>
@@ -413,7 +444,7 @@ export default function SVPPortal() {
             </div>
           ) : (
             <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-              <div style={{ flex: 1, overflowY: "auto", padding: "20px 28px", display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div style={{ flex: 1, overflowY: "auto", padding: isMobile ? "14px 12px" : "20px 28px", display: "flex", flexDirection: "column", gap: "12px" }}>
                 {msgs.map((m, i) => (
                   <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
                     <div style={{ maxWidth: "78%", padding: "13px 16px", background: m.role === "user" ? dia.cor + "15" : "#111", border: `1px solid ${m.role === "user" ? dia.cor + "44" : "#1C1C1C"}`, fontSize: "13px", lineHeight: 1.75, color: "#C0B8A8", whiteSpace: "pre-wrap" }}>
@@ -428,7 +459,7 @@ export default function SVPPortal() {
                 )}
                 <div ref={msgsRef} />
               </div>
-              <div style={{ padding: "14px 28px", borderTop: "1px solid #181818", display: "flex", gap: "10px", background: "#0A0A0A", flexShrink: 0 }}>
+              <div style={{ padding: isMobile ? "10px 12px" : "14px 28px", borderTop: "1px solid #181818", display: "flex", gap: "10px", background: "#0A0A0A", flexShrink: 0 }}>
                 <textarea value={input} onChange={e => setInput(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); enviar(); } }}
                   placeholder="Digite sua mensagem ou cole o output do agente anterior…" rows={2}
