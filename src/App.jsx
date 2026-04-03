@@ -382,6 +382,19 @@ export default function SVPPortal() {
     return idx !== -1 ? texto.slice(idx).trim() : null;
   };
 
+  const montarSystemPrompt = () => {
+    const base = PROMPTS[diaAtivo];
+    if (diaAtivo === 0) return base;
+    const notasAnterior = (progresso[diaAtivo - 1]?.notas || "").trim();
+    if (!notasAnterior) return base;
+    return `${base}
+
+CONTEXTO RECEBIDO DA ETAPA ANTERIOR (DIA ${diaAtivo - 1}):
+${notasAnterior}
+
+INSTRUÇÃO OPERACIONAL: O contexto acima foi carregado automaticamente. Não peça para a aluna colar nenhum bloco. Inicie diretamente na sua missão.`;
+  };
+
   const enviar = async () => {
     if (!input.trim() || carregando) return;
     const userMsg = { role: "user", content: input };
@@ -396,7 +409,7 @@ export default function SVPPortal() {
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001",
           max_tokens: 800,
-          system: PROMPTS[diaAtivo],
+          system: montarSystemPrompt(),
           messages: novas.map(m => ({ role: m.role, content: m.content }))
         })
       });
