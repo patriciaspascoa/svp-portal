@@ -166,9 +166,9 @@ const DIAS = [
         { label: "SITUAÇÃO REAL", desc: "Em que momento exato esse problema aparece?" },
         { label: "PESSOA AFETADA", desc: "Quem vive isso hoje, sem filtros de avatar?" }
       ],
-      regra: "Não ajuste nada ainda. Cole a resposta do agente na aba Anotações."
+      regra: "Não ajuste nada ainda. O resultado será salvo automaticamente nas Anotações."
     },
-    checklist: ["Li as instruções desta sessão antes de começar", "Identifiquei o problema principal concreto", "Descrevi a situação real em que ele aparece", "Nomeei a pessoa afetada sem filtros", "Copiei o bloco BASE COMERCIAL nas Anotações"]
+    checklist: ["Li as instruções desta sessão antes de começar", "Identifiquei o problema principal concreto", "Descrevi a situação real em que ele aparece", "Nomeei a pessoa afetada sem filtros"]
   },
   {
     id: 1, label: "DIA 1", titulo: "Estruturador da Oferta",
@@ -183,9 +183,9 @@ const DIAS = [
         { label: "RESULTADO CONCRETO", desc: "O que ela ganha de forma mensurável" },
         { label: "REGRA DE ESTABILIDADE", desc: "Blindada por 30 dias. Alteração = sabotagem." }
       ],
-      regra: "A oferta fica blindada por 30 dias. Cole a resposta do agente nas Anotações."
+      regra: "A oferta fica blindada por 30 dias. O resultado será salvo automaticamente nas Anotações."
     },
-    checklist: ["Colei o bloco BASE COMERCIAL (Dia 0)", "Promessa em 1 frase objetiva", "Público com especificidade real", "Resultado concreto e mensurável", "Compromisso de não mudar por 30 dias", "Colei a resposta do agente nas Anotações"]
+    checklist: ["Promessa em 1 frase objetiva", "Público com especificidade real", "Resultado concreto e mensurável", "Compromisso de não mudar por 30 dias"]
   },
   {
     id: 2, label: "DIA 2", titulo: "Engenheiro de MVP",
@@ -200,9 +200,9 @@ const DIAS = [
         { label: "PREÇO", desc: "Valor de validação definido agora" },
         { label: "COMPRA", desc: "Link ou PIX — como a pessoa compra" }
       ],
-      regra: "Sem nome perfeito, sem site, sem logo. Cole a resposta do agente nas Anotações."
+      regra: "Sem nome perfeito, sem site, sem logo. O resultado será salvo automaticamente nas Anotações."
     },
-    checklist: ["Colei o bloco ESTABILIZAÇÃO (Dia 1)", "Estrutura do produto definida", "Escopo claro e enxuto", "Preço definido (não vou pensar)", "Forma de pagamento configurada", "Colei a resposta do agente nas Anotações"]
+    checklist: ["Estrutura do produto definida", "Escopo claro e enxuto", "Preço definido (não vou pensar)", "Forma de pagamento configurada"]
   },
   {
     id: 3, label: "DIA 3", titulo: "Arquiteto de Fluxo",
@@ -216,9 +216,9 @@ const DIAS = [
         { label: "CTA", desc: "A frase única de chamada" },
         { label: "SCRIPTS", desc: "Abordagem / Objeção / Fechamento" }
       ],
-      regra: "Nada de múltiplos caminhos. Cole a resposta do agente nas Anotações."
+      regra: "Nada de múltiplos caminhos. O resultado será salvo automaticamente nas Anotações."
     },
-    checklist: ["Colei o bloco MVP (Dia 2)", "Canal único definido", "CTA único escrito e memorizado", "Script de abordagem pronto", "Script de objeção pronto", "Script de fechamento pronto", "Colei a resposta do agente nas Anotações"]
+    checklist: ["Canal único definido", "CTA único escrito e memorizado", "Script de abordagem pronto", "Script de objeção pronto", "Script de fechamento pronto"]
   },
   {
     id: 4, label: "DIA 4", titulo: "Analista de Ativação",
@@ -232,9 +232,9 @@ const DIAS = [
         { label: "TABELA DE REGISTRO", desc: "Data | Abordagem | Oferta | Resultado" },
         { label: "STATUS", desc: "Em execução" }
       ],
-      regra: "Se não houver oferta, o lucro será zero. Cole a resposta do agente nas Anotações."
+      regra: "Se não houver oferta, o lucro será zero. O resultado será salvo automaticamente nas Anotações."
     },
-    checklist: ["Colei o bloco FLUXO (Dia 3)", "Meta diária em números concretos", "Tabela de registro criada", "Primeiro lote de contatos mapeado", "Primeira oferta enviada hoje", "Colei a resposta do agente nas Anotações"]
+    checklist: ["Meta diária em números concretos", "Tabela de registro criada", "Primeiro lote de contatos mapeado", "Primeira oferta enviada hoje"]
   },
   {
     id: 5, label: "DIAS 5–7", titulo: "Analista de Gargalo",
@@ -250,7 +250,7 @@ const DIAS = [
       ],
       regra: "O improviso termina aqui. Para resolver este gargalo você precisa de Visão Estratégica."
     },
-    checklist: ["Colei os blocos Dia 1 e Dia 4", "Informei os números reais da semana", "Gargalo principal identificado", "Entendo o que o SVP instalou", "Entendo o que preciso para o próximo nível"]
+    checklist: ["Informei os números reais da semana", "Gargalo principal identificado", "Entendo o que o SVP instalou", "Entendo o que preciso para o próximo nível"]
   }
 ];
 
@@ -302,6 +302,8 @@ function TelaDeAcesso({ onAcesso }) {
 export default function SVPPortal() {
   const [acesso, setAcesso] = useState(() => !!sessionStorage.getItem("svp-acesso"));
   const [diaAtivo, setDiaAtivo] = useState(0);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const [sidebarAberta, setSidebarAberta] = useState(false);
   const [progresso, setProgresso] = useState(() => {
     try { return JSON.parse(localStorage.getItem("svp-progresso") || "{}"); } catch { return {}; }
   });
@@ -317,6 +319,12 @@ export default function SVPPortal() {
   const [showModal, setShowModal] = useState(() => !localStorage.getItem("svp-onboarding-seen"));
   const [showConfirmReinicio, setShowConfirmReinicio] = useState(false);
   const msgsRef = useRef(null);
+
+  useEffect(() => {
+    const fn = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
 
   useEffect(() => {
     try { localStorage.setItem("svp-progresso", JSON.stringify(progresso)); } catch {}
@@ -474,9 +482,9 @@ INSTRUÇÃO OPERACIONAL: O contexto acima foi carregado automaticamente. Não pe
             <div style={{ fontSize: "22px", fontWeight: "600", marginBottom: "32px" }}>Como usar o portal SVP</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "36px" }}>
               {[
-                { n: "1", t: "O output é salvo automaticamente", d: "Quando o agente gerar o output final (✅), ele é salvo automaticamente nas Anotações da sessão. Você não precisa copiar nada." },
+                { n: "1", t: "O resultado é salvo automaticamente", d: "Quando o agente gerar o resultado final (✅), ele é salvo automaticamente nas Anotações da sessão. Você não precisa copiar nada." },
                 { n: "2", t: "Não pule etapas", d: "Cada agente exige a resposta do agente anterior. Siga a ordem do Dia 0 ao Dia 5–7." },
-                { n: "3", t: "Não feche sem salvar nas Anotações", d: "O histórico do chat salva automaticamente, mas cole a resposta do agente na aba Anotações antes de avançar." },
+                { n: "3", t: "Não feche o portal no meio da etapa", d: "O histórico do chat e as respostas dos agentes são salvos automaticamente. Use sempre o mesmo dispositivo e navegador para não perder o progresso." },
                 { n: "4", t: "Baixe seu documento no final", d: "Ao concluir todas as etapas, clique em DOCUMENTO no topo para baixar o resumo completo." },
               ].map(item => (
                 <div key={item.n} style={{ display: "flex", gap: "16px" }}>
@@ -519,36 +527,50 @@ INSTRUÇÃO OPERACIONAL: O contexto acima foi carregado automaticamente. Não pe
         </div>
       )}
 
-      <header style={{ borderBottom: "1px solid #1F2937", padding: "20px 40px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#0F172A", position: "sticky", top: 0, zIndex: 20 }}>
-        <div>
-          <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "4px" }}>MÉTODO ASCENDER</div>
-          <div style={{ fontSize: "20px", letterSpacing: "1px", fontWeight: "600" }}>SVP <span style={{ color: "#6B7280", fontSize: "14px", fontWeight: "400" }}>— Sistema de Vendas Previsíveis</span></div>
-        </div>
+      <header style={{ borderBottom: "1px solid #1F2937", padding: isMobile ? "14px 16px" : "20px 40px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#0F172A", position: "sticky", top: 0, zIndex: 20 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <button onClick={baixarDocumento}
-            title="Baixar documento com todos os outputs"
-            style={{ background: "none", border: "1px solid #374151", color: "#9CA3AF", fontSize: "10px", letterSpacing: "1px", padding: "9px 18px", cursor: "pointer", transition: "all 0.2s", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", fontWeight: "500" }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = "#C9A84C"; e.currentTarget.style.color = "#C9A84C"; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = "#374151"; e.currentTarget.style.color = "#9CA3AF"; }}>
-            ↓ DOCUMENTO
-          </button>
+          {isMobile && (
+            <button onClick={() => setSidebarAberta(v => !v)}
+              style={{ background: "none", border: "none", color: "#C9A84C", fontSize: "22px", cursor: "pointer", padding: "2px 4px", lineHeight: 1, flexShrink: 0 }}>
+              {sidebarAberta ? "✕" : "☰"}
+            </button>
+          )}
+          <div>
+            <div style={{ fontSize: "9px", letterSpacing: "4px", color: "#C9A84C", marginBottom: "4px" }}>MÉTODO ASCENDER</div>
+            <div style={{ fontSize: isMobile ? "16px" : "20px", letterSpacing: "1px", fontWeight: "600" }}>
+              SVP {!isMobile && <span style={{ color: "#6B7280", fontSize: "14px", fontWeight: "400" }}>— Sistema de Vendas Previsíveis</span>}
+            </div>
+          </div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "8px" : "12px" }}>
+          {!isMobile && (
+            <button onClick={baixarDocumento}
+              title="Baixar documento com todos os resultados"
+              style={{ background: "none", border: "1px solid #374151", color: "#9CA3AF", fontSize: "10px", letterSpacing: "1px", padding: "9px 18px", cursor: "pointer", transition: "all 0.2s", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", fontWeight: "500" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "#C9A84C"; e.currentTarget.style.color = "#C9A84C"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "#374151"; e.currentTarget.style.color = "#9CA3AF"; }}>
+              ↓ DOCUMENTO
+            </button>
+          )}
           <button onClick={() => setShowModal(true)}
             title="Ver orientações de uso"
-            style={{ background: "none", border: "1px solid #374151", color: "#9CA3AF", fontSize: "10px", letterSpacing: "1px", padding: "9px 18px", cursor: "pointer", transition: "all 0.2s", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", fontWeight: "500" }}
+            style={{ background: "none", border: "1px solid #374151", color: "#9CA3AF", fontSize: "10px", letterSpacing: "1px", padding: isMobile ? "8px 12px" : "9px 18px", cursor: "pointer", transition: "all 0.2s", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", fontWeight: "500" }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = "#6B7280"; e.currentTarget.style.color = "#F1F5F9"; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = "#374151"; e.currentTarget.style.color = "#9CA3AF"; }}>
-            ? AJUDA
+            ? {!isMobile && "AJUDA"}
           </button>
-          <button onClick={() => setShowConfirmReinicio(true)}
-            title="Apagar todo o progresso e reiniciar do zero"
-            style={{ background: "none", border: "1px solid #374151", color: "#4B5563", fontSize: "10px", letterSpacing: "1px", padding: "9px 18px", cursor: "pointer", transition: "all 0.2s", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", fontWeight: "500" }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = "#E84A4A88"; e.currentTarget.style.color = "#E84A4A"; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = "#374151"; e.currentTarget.style.color = "#4B5563"; }}>
-            ↺ REINICIAR
-          </button>
-          <div style={{ textAlign: "right", marginLeft: "12px" }}>
-            <div style={{ fontSize: "11px", color: "#9CA3AF", letterSpacing: "1px", marginBottom: "7px" }}>{totalConcluidos}/{DIAS.length} etapas</div>
-            <div style={{ width: "140px", height: "2px", background: "#1F2937" }}>
+          {!isMobile && (
+            <button onClick={() => setShowConfirmReinicio(true)}
+              title="Apagar todo o progresso e reiniciar do zero"
+              style={{ background: "none", border: "1px solid #374151", color: "#4B5563", fontSize: "10px", letterSpacing: "1px", padding: "9px 18px", cursor: "pointer", transition: "all 0.2s", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", fontWeight: "500" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "#E84A4A88"; e.currentTarget.style.color = "#E84A4A"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "#374151"; e.currentTarget.style.color = "#4B5563"; }}>
+              ↺ REINICIAR
+            </button>
+          )}
+          <div style={{ textAlign: "right", marginLeft: isMobile ? "4px" : "12px" }}>
+            <div style={{ fontSize: "11px", color: "#9CA3AF", letterSpacing: "1px", marginBottom: "7px" }}>{totalConcluidos}/{DIAS.length}</div>
+            <div style={{ width: isMobile ? "60px" : "140px", height: "2px", background: "#1F2937" }}>
               <div style={{ height: "100%", width: `${pct}%`, background: "#C9A84C", transition: "width 0.5s" }} />
             </div>
           </div>
@@ -556,14 +578,27 @@ INSTRUÇÃO OPERACIONAL: O contexto acima foi carregado automaticamente. Não pe
       </header>
 
       <div style={{ display: "flex", height: "calc(100vh - 69px)" }}>
-        <aside style={{ width: "240px", minWidth: "240px", borderRight: "1px solid #1F2937", background: "#0F172A", overflowY: "auto" }}>
+        {isMobile && sidebarAberta && (
+          <div onClick={() => setSidebarAberta(false)}
+            style={{ position: "fixed", inset: 0, top: "69px", background: "rgba(0,0,0,0.65)", zIndex: 28 }} />
+        )}
+        <aside style={{
+          width: "240px", minWidth: "240px",
+          borderRight: "1px solid #1F2937", background: "#0F172A", overflowY: "auto",
+          ...(isMobile ? {
+            position: "fixed", left: 0, top: "69px", bottom: 0,
+            transform: sidebarAberta ? "translateX(0)" : "translateX(-100%)",
+            transition: "transform 0.25s ease",
+            zIndex: 29
+          } : {})
+        }}>
           <div style={{ padding: "24px 22px 12px", fontSize: "9px", letterSpacing: "3px", color: "#6B7280" }}>TRILHA</div>
           {DIAS.map((d, i) => {
             const ativo = diaAtivo === i;
             const ok = concluido(i);
             const bloq = !desbloqueado(i);
             return (
-              <button key={i} onClick={() => { if (!bloq) { setDiaAtivo(i); setTab("sessao"); } }} disabled={bloq}
+              <button key={i} onClick={() => { if (!bloq) { setDiaAtivo(i); setTab("sessao"); if (isMobile) setSidebarAberta(false); } }} disabled={bloq}
                 style={{ width: "100%", padding: "14px 22px", background: ativo ? "#1E293B" : "none", border: "none", borderLeft: ativo ? `2px solid ${d.cor}` : "2px solid transparent", cursor: bloq ? "not-allowed" : "pointer", textAlign: "left", opacity: bloq ? 0.3 : 1, transition: "all 0.15s" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                   <span style={{ fontSize: "13px", color: ok ? "#6B8E7F" : ativo ? d.cor : "#374151" }}>{ok ? "✓" : bloq ? "🔒" : "○"}</span>
@@ -590,7 +625,7 @@ INSTRUÇÃO OPERACIONAL: O contexto acima foi carregado automaticamente. Não pe
           </div>
 
           {tab === "sessao" ? (
-            <div style={{ flex: 1, overflowY: "auto", padding: "36px 40px" }}>
+            <div style={{ flex: 1, overflowY: "auto", padding: isMobile ? "20px 16px" : "36px 40px" }}>
               <div style={{ maxWidth: "700px" }}>
 
                 <div style={{ marginBottom: "32px", padding: "20px 24px", background: "#1E293B", border: "1px solid #374151", borderLeft: "3px solid #C9A84C" }}>
@@ -599,7 +634,7 @@ INSTRUÇÃO OPERACIONAL: O contexto acima foi carregado automaticamente. Não pe
                     {[
                       "Leia as informações desta sessão",
                       "Clique na aba AGENTE e converse com ele",
-                      "O output final (✅) é salvo automaticamente nas Anotações",
+                      "O resultado final (✅) é salvo automaticamente nas Anotações",
                       "Marque o checklist ao concluir",
                     ].map((passo, i) => (
                       <div key={i} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
@@ -633,7 +668,7 @@ INSTRUÇÃO OPERACIONAL: O contexto acima foi carregado automaticamente. Não pe
                 </div>
 
                 <div style={{ marginBottom: "24px" }}>
-                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#6B7280", marginBottom: "12px" }}>OUTPUT ESPERADO</div>
+                  <div style={{ fontSize: "9px", letterSpacing: "3px", color: "#6B7280", marginBottom: "12px" }}>RESULTADO ESPERADO</div>
                   <div style={{ background: "#1E293B", border: "1px solid #1F2937", padding: "24px" }}>
                     <div style={{ fontSize: "12px", color: dia.cor, letterSpacing: "1px", marginBottom: "16px", fontWeight: "500" }}>✅ {dia.output.titulo}</div>
                     {dia.output.itens.map((item, i) => (
@@ -694,13 +729,13 @@ INSTRUÇÃO OPERACIONAL: O contexto acima foi carregado automaticamente. Não pe
                         <span>✅</span> Salvo automaticamente
                       </div>
                     ) : (
-                      <div style={{ fontSize: "11px", color: "#4B5563" }}>o output do agente aparece aqui</div>
+                      <div style={{ fontSize: "11px", color: "#4B5563" }}>o resultado do agente aparece aqui</div>
                     )}
                   </div>
                   <textarea
                     value={p.notas || ""}
                     onChange={e => salvar(diaAtivo, { ...p, notas: e.target.value })}
-                    placeholder="A resposta do agente será salva aqui automaticamente quando ele gerar o output final (✅)."
+                    placeholder="A resposta do agente será salva aqui automaticamente quando ele gerar o resultado final (✅)."
                     style={{ width: "100%", minHeight: "120px", background: "#1E293B", border: "1px solid #1F2937", padding: "16px", color: "#9CA3AF", fontSize: "14px", lineHeight: 1.7, fontFamily: "'Inter', system-ui, -apple-system, sans-serif", resize: "vertical", outline: "none", boxSizing: "border-box" }} />
                 </div>
               </div>
@@ -711,11 +746,11 @@ INSTRUÇÃO OPERACIONAL: O contexto acima foi carregado automaticamente. Não pe
               <div style={{ padding: "11px 32px", background: "#0F172A", borderBottom: "1px solid #1F2937", display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 }}>
                 <span style={{ color: "#6B8E7F", fontSize: "13px" }}>✅</span>
                 <span style={{ fontSize: "13px", color: "#9CA3AF" }}>
-                  Quando o agente gerar o output final, ele será salvo automaticamente nas <strong style={{ color: "#F1F5F9" }}>Anotações</strong> desta sessão.
+                  Quando o agente gerar o resultado final, ele será salvo automaticamente nas <strong style={{ color: "#F1F5F9" }}>Anotações</strong> desta sessão.
                 </span>
               </div>
 
-              <div style={{ flex: 1, overflowY: "auto", padding: "24px 32px", display: "flex", flexDirection: "column", gap: "14px" }}>
+              <div style={{ flex: 1, overflowY: "auto", padding: isMobile ? "14px 12px" : "24px 32px", display: "flex", flexDirection: "column", gap: "14px" }}>
                 {msgs.map((m, i) => (
                   <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
                     <div style={{ maxWidth: "78%", padding: "15px 18px", background: m.role === "user" ? dia.cor + "18" : "#1E293B", border: `1px solid ${m.role === "user" ? dia.cor + "55" : "#374151"}`, fontSize: "15px", lineHeight: 1.75, color: "#E2E8F0", whiteSpace: "pre-wrap" }}>
@@ -730,7 +765,7 @@ INSTRUÇÃO OPERACIONAL: O contexto acima foi carregado automaticamente. Não pe
                 )}
                 <div ref={msgsRef} />
               </div>
-              <div style={{ padding: "16px 32px", borderTop: "1px solid #1F2937", display: "flex", gap: "12px", background: "#0F172A", flexShrink: 0 }}>
+              <div style={{ padding: isMobile ? "10px 12px" : "16px 32px", borderTop: "1px solid #1F2937", display: "flex", gap: "12px", background: "#0F172A", flexShrink: 0 }}>
                 <textarea value={input} onChange={e => setInput(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); enviar(); } }}
                   placeholder="Digite sua mensagem ou cole a resposta do agente anterior…" rows={2}
