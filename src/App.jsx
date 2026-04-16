@@ -258,7 +258,7 @@ const DIAS = [
   }
 ];
 
-const SENHA_CORRETA = "portalsvpalunas";
+const SENHA_CORRETA = "versaoatual26";
 
 function TelaDeAcesso({ onAcesso }) {
   const [valor, setValor] = useState("");
